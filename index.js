@@ -1,5 +1,5 @@
 const markdown = require('simple-markdown');
-const highlight = require('highlight.js');
+const base64 = require('base-64');
 
 function htmlTag(tagName, content, attributes, isClosed = true, state = { }) {
 	if (typeof isClosed === 'object') {
@@ -55,16 +55,8 @@ const rules = {
 			};
 		},
 		html: (node, output, state) => {
-			let code;
-			if (node.lang && highlight.getLanguage(node.lang))
-				code = highlight.highlight(node.content, { language: node.lang, ignoreIllegals: true }); // Discord seems to set ignoreIllegals: true
-
-			if (code && state.cssModuleNames) // Replace classes in hljs output
-				code.value = code.value.replace(/<span class="([a-z0-9-_ ]+)">/gi, (str, m) =>
-					str.replace(m, m.split(' ').map(cl => state.cssModuleNames[cl] || cl).join(' ')));
-
 			return htmlTag('pre', htmlTag(
-				'code', code ? code.value : markdown.sanitizeText(node.content), { class: `hljs${code ? ' ' + code.language : ''}` }, state
+				'code', "", { "data-code": base64.encode(node.content), "data-code-language": node.lang }, state
 			), null, state);
 		}
 	}),

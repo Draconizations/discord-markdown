@@ -24,7 +24,7 @@
 		"prepublishOnly": "npm run dist"
 	},
 	"dependencies": {
-		"highlight.js": "^11.2.0",
+		"base-64": "^1.0.0",
 		"simple-markdown": "^0.7.3"
 	},
 	"devDependencies": {

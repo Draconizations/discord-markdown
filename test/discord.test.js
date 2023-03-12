@@ -93,5 +93,5 @@ test('spoilers are handled correctly', () => {
 	expect(markdown.toHTML('||<i>italics</i>||'))
 		.toBe('<span class="d-spoiler">&lt;i&gt;italics&lt;/i&gt;</span>');
 	expect(markdown.toHTML('||```\ncode\nblock\n```||'))
-		.toBe('<span class="d-spoiler"><pre><code class="hljs">code\nblock</code></pre></span>');
+		.toBe('<span class="d-spoiler"><pre><code data-code="Y29kZQpibG9jaw=="></code></pre></span>');
 });

@@ -37,15 +37,7 @@ test('no underscore italic in one word', () => {
 
 test('Codeblocks should work with ini', () => {
 	expect(markdown.toHTML('```ini\n[01] asdasd\n```'))
-		.toContain('hljs ini');
-});
-
-test('Codeblocks should work with css modules', () => {
-	expect(markdown.toHTML('```ini\n;asdasada\n[01] asdasd\n```', {
-		cssModuleNames: {
-			'hljs-section': 'testing'
-		}
-	})).toContain('<span class="testing">[01]</span>');
+		.toContain('data-code="WzAxXSBhc2Rhc2Q=" data-code-language="ini"');
 });
 
 test('Spoiler edge-cases', () => {
