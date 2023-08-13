@@ -30,7 +30,7 @@ markdown.htmlTag = htmlTag;
 
 const rules = {
 	heading: Object.assign({}, markdown.defaultRules.heading, {
-		match: blockRegex(/^ *(#{1,3})([^\n]+?)#* *(?:\n *)+\n/),
+		match: markdown.inlineRegex(/^ *(#{1,3}) ([^\n#]+)#*\n?/),
 	}),
 	blockQuote: Object.assign({ }, markdown.defaultRules.blockQuote, {
 		match: function(source, state, prevSource) {

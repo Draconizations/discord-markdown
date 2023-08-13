@@ -75,6 +75,15 @@ test('Multiline', () => {
 		.toBe('some <em>awesome</em> text<br>that <strong>spreads</strong> lines');
 });
 
+test('Heading parsing', () => {
+	expect(markdown.toHTML('# heading level 1'))
+		.toBe('<h1>heading level 1</h1>');
+	expect(markdown.toHTML('## heading level 2'))
+		.toBe('<h2>heading level 2</h2>');
+	expect(markdown.toHTML('### heading level 3'))
+		.toBe('<h3>heading level 3</h3>');
+})
+
 test('Block quotes', () => {
 	expect(markdown.toHTML('> text > here'))
 		.toBe('<blockquote>text &gt; here</blockquote>');
