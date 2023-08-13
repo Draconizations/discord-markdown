@@ -84,6 +84,24 @@ test('Heading parsing', () => {
 		.toBe('<h3>heading level 3</h3>');
 })
 
+test('Heading level 4-6 should not be parsed', () => {
+	expect(markdown.toHTML('#### heading level 4'))
+		.toBe('#### heading level 4');
+	expect(markdown.toHTML('##### heading level 5'))
+		.toBe('##### heading level 5');
+	expect(markdown.toHTML('###### heading level 6'))
+		.toBe('###### heading level 6');
+})
+
+test('Ordered lists', () => {
+	expect(markdown.toHTML('- hi\n- hello'))
+		.toBe('<ul><li>hi</li><li>hello</li></ul>')
+	expect(markdown.toHTML('* hi\n* hello'))
+		.toBe('<ul><li>hi</li><li>hello</li></ul>')		
+	expect(markdown.toHTML("1. hello\n2. hi 3. nope\n3. yes"))
+		.toBe('<ol start=\"1\"><li>hello</li><li>hi 3. nope</li><li>yes</li></ol>')
+})
+
 test('Block quotes', () => {
 	expect(markdown.toHTML('> text > here'))
 		.toBe('<blockquote>text &gt; here</blockquote>');

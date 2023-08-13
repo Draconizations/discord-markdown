@@ -30,7 +30,10 @@ markdown.htmlTag = htmlTag;
 
 const rules = {
 	heading: Object.assign({}, markdown.defaultRules.heading, {
-		match: markdown.inlineRegex(/^ *(#{1,3}) ([^\n#]+)#*\n?/),
+		match: function(source, state, prevSource) {
+			const match = /^ *(#{1,}) ([^\n#]+)#*\n?/.exec(source)
+			return match === null ? null : match[1].length > 3 || /^ *#+/.test(prevSource) ? null : match
+		}
 	}),
 	blockQuote: Object.assign({ }, markdown.defaultRules.blockQuote, {
 		match: function(source, state, prevSource) {
@@ -48,7 +51,35 @@ const rules = {
 			}
 		}
 	}),
-	list: markdown.defaultRules.list,
+	list: Object.assign({}, markdown.defaultRules.list, {
+		match: function(source, state) {
+			// We only want to break into a list if we are at the start of a
+			// line. This is to avoid parsing "hi * there" with "* there"
+			// becoming a part of a list.
+			// You might wonder, "but that's inline, so of course it wouldn't
+			// start a list?". You would be correct! Except that some of our
+			// lists can be inline, because they might be inside another list,
+			// in which case we can parse with inline scope, but need to allow
+			// nested lists inside this inline scope.
+			var prevCaptureStr = state.prevCapture == null ? "" : state.prevCapture[0];
+			var isStartOfLineCapture = prevCaptureStr === "" ? ["", ""] : /\n( *)/.exec(prevCaptureStr);
+			const LIST_BULLET = "(?:[*+-]|\\d+\\.)"
+
+			if (isStartOfLineCapture) {
+					source = isStartOfLineCapture[1] + source;
+					return new RegExp(
+						"^( *)(" + LIST_BULLET + ") " +
+						"[\\s\\S]+?(?:\n{2,}(?! )" +
+						"(?!\\1" + LIST_BULLET + " )\\n*" +
+						// the \\s*$ here is so that we can parse the inside of nested
+						// lists, where our content might end before we receive two `\n`s
+						"|\\s*\n*$)"
+				).exec(source);
+			} else {
+					return null;
+			}
+		}
+	}),
 	codeBlock: Object.assign({ }, markdown.defaultRules.codeBlock, {
 		match: markdown.inlineRegex(/^```(([a-z0-9-]+?)\n+)?\n*([^]+?)\n*```/i),
 		parse: function(capture, parse, state) {
