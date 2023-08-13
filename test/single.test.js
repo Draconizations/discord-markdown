@@ -82,6 +82,8 @@ test('Heading parsing', () => {
 		.toBe('<h2>heading level 2</h2>');
 	expect(markdown.toHTML('### heading level 3'))
 		.toBe('<h3>heading level 3</h3>');
+	expect(markdown.toHTML('## ok\n### welp'))
+		.toBe('<h2>ok</h2><h3>welp</h3>')
 })
 
 test('Heading level 4-6 should not be parsed', () => {
