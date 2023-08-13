@@ -29,6 +29,9 @@ function htmlTag(tagName, content, attributes, isClosed = true, state = { }) {
 markdown.htmlTag = htmlTag;
 
 const rules = {
+	heading: Object.assign({}, markdown.defaultRules.heading, {
+		match: blockRegex(/^ *(#{1,3})([^\n]+?)#* *(?:\n *)+\n/),
+	}),
 	blockQuote: Object.assign({ }, markdown.defaultRules.blockQuote, {
 		match: function(source, state, prevSource) {
 			return !/^$|\n *$/.test(prevSource) || state.inQuote ? null : /^( *>>> ([\s\S]*))|^( *> [^\n]*(\n *> [^\n]*)*\n?)/.exec(source);
@@ -45,6 +48,7 @@ const rules = {
 			}
 		}
 	}),
+	list: markdown.defaultRules.list,
 	codeBlock: Object.assign({ }, markdown.defaultRules.codeBlock, {
 		match: markdown.inlineRegex(/^```(([a-z0-9-]+?)\n+)?\n*([^]+?)\n*```/i),
 		parse: function(capture, parse, state) {
