@@ -29,13 +29,6 @@ function htmlTag(tagName, content, attributes, isClosed = true, state = { }) {
 markdown.htmlTag = htmlTag;
 
 const rules = {
-	heading: Object.assign({}, markdown.defaultRules.heading, {
-		match: function(source, state) {
-			const match = /^ *(#{1,}) ([^\n#]+)#*\n?/.exec(source);
-			const prevCaptureStr = state.prevCapture == null ? "" : state.prevCapture[0];
-			return match === null ? null : match[1].length > 3 || /^ *#+$/.test(prevCaptureStr) ? null : match;
-		}
-	}),
 	blockQuote: Object.assign({ }, markdown.defaultRules.blockQuote, {
 		match: function(source, state, prevSource) {
 			return !/^$|\n *$/.test(prevSource) || state.inQuote ? null : /^( *>>> ([\s\S]*))|^( *> [^\n]*(\n *> [^\n]*)*\n?)/.exec(source);
@@ -174,6 +167,16 @@ const rules = {
 	}
 };
 
+const messageBodyOnly = {
+	heading: Object.assign({}, markdown.defaultRules.heading, {
+		match: function(source, state) {
+			const match = /^ *(#{1,}) ([^\n#]+)#*\n?/.exec(source);
+			const prevCaptureStr = state.prevCapture == null ? "" : state.prevCapture[0];
+			return match === null ? null : match[1].length > 3 || /^ *#+$/.test(prevCaptureStr) ? null : match;
+		}
+	})
+}
+
 const discordCallbackDefaults = {
 	user: node => '@' + markdown.sanitizeText(node.id),
 	channel: node => '#' + markdown.sanitizeText(node.id),
@@ -277,8 +280,10 @@ const rulesEmbed = Object.assign({ }, rules, {
 	link: markdown.defaultRules.link
 });
 
-const parser = markdown.parserFor(rules);
-const htmlOutput = markdown.outputFor(rules, 'html');
+const rulesDefault = Object.assign({ }, messageBodyOnly, rules)
+
+const parser = markdown.parserFor(rulesDefault);
+const htmlOutput = markdown.outputFor(rulesDefault, 'html');
 const parserDiscord = markdown.parserFor(rulesDiscordOnly);
 const htmlOutputDiscord = markdown.outputFor(rulesDiscordOnly, 'html');
 const parserEmbed = markdown.parserFor(rulesEmbed);
