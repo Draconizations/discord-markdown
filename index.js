@@ -1,5 +1,5 @@
 const markdown = require('simple-markdown');
-const base64 = require('base-64');
+const { Base64 } = require('js-base64');
 
 function htmlTag(tagName, content, attributes, isClosed = true, state = { }) {
 	if (typeof isClosed === 'object') {
@@ -77,7 +77,7 @@ const rules = {
 		},
 		html: (node, output, state) => {
 			return htmlTag('pre', htmlTag(
-				'code', "", { "data-code": base64.encode(node.content), "data-code-language": node.lang }, state
+				'code', "", { "data-code": Base64.encode(node.content), "data-code-language": node.lang }, state
 			), null, state);
 		}
 	}),
