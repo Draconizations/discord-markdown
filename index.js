@@ -49,7 +49,7 @@ const rules = {
 		match: function(source, state) {
 			var prevCaptureStr = state.prevCapture == null ? "" : state.prevCapture[0];
 			var isStartOfLineCapture = /(?:^|\n(?:\>{1}|\>{3})?)( *)$/.exec(prevCaptureStr);
-			const LIST_BULLET = "(?:[*+-]|\\d+\\.)"
+			const LIST_BULLET = "(?:[*-]|\\d+\\.)"
 
 			if (isStartOfLineCapture) {
 					source = isStartOfLineCapture[1] + source;
@@ -66,7 +66,7 @@ const rules = {
 			}
 		},
 		parse: function(capture, parse, state) {
-			var LIST_BULLET = "(?:[*+-]|\\d+\\.)";
+			var LIST_BULLET = "(?:[*-]|\\d+\\.)";
 
 			var LIST_ITEM_PREFIX = "( *)(" + LIST_BULLET + ") +";
 			var LIST_ITEM_PREFIX_R = new RegExp("^" + LIST_ITEM_PREFIX);
