@@ -239,12 +239,9 @@ const rules = {
 
 			return regex.exec(source);
 		},
-		parse: capture => {
+		parse: (capture, parse, state) => {
 			return {
-				content: [{
-					type: "text",
-					content: capture[1]
-				}]
+				content: parse(capture[1], Object.assign({ }, state, { inQuote: true }))
 			}
 		},
 		html: function(node, output, state) {
