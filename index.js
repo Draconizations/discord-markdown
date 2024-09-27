@@ -232,6 +232,25 @@ const rules = {
 			return htmlTag('code', markdown.sanitizeText(node.content.trim()), null, state);
 		}
 	}),
+	small: {
+		order: markdown.defaultRules.heading.order,
+		match: (source, state) => {
+			const regex = /^(?:\>{1}|\>{3})? *(?:-#)([^\n]+?) *(?:\n *|$)/
+
+			return regex.exec(source);
+		},
+		parse: capture => {
+			return {
+				content: [{
+					type: "text",
+					content: capture[1]
+				}]
+			}
+		},
+		html: function(node, output, state) {
+			return htmlTag('small', output(node.content, state), null, state)
+		}
+	},
 	text: Object.assign({ }, markdown.defaultRules.text, {
 		match: source => /^[\s\S]+?(?=[^0-9A-Za-z\s\u00c0-\uffff-]|\n\n|\n|\w+:\S|$)/.exec(source),
 		html: function(node, output, state) {
