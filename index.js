@@ -29,6 +29,12 @@ function htmlTag(tagName, content, attributes, isClosed = true, state = { }) {
 markdown.htmlTag = htmlTag;
 
 const rules = {
+	heading: Object.assign({}, markdown.defaultRules.heading, {
+		match: function(source) {
+			return /^ *(#{1,3})([^\n]+?)#* *(?:\n *)+/.exec(source);
+		}
+	}),
+
 	blockQuote: Object.assign({ }, markdown.defaultRules.blockQuote, {
 		match: function(source, state, prevSource) {
 			return !/^$|\n *$/.test(prevSource) || state.inQuote ? null : /^( *>>> ([\s\S]*))|^( *> [^\n]*(\n *> [^\n]*)*\n?)/.exec(source);
@@ -287,15 +293,7 @@ const rules = {
 	}
 };
 
-const messageBodyOnly = {
-	heading: Object.assign({}, markdown.defaultRules.heading, {
-		match: function(source, state) {
-			const match = /^ *(#{1,}) ([^\n#]+)#*\n?/.exec(source);
-			const prevCaptureStr = state.prevCapture == null ? "" : state.prevCapture[0];
-			return match === null ? null : match[1].length > 3 || /^ *#+$/.test(prevCaptureStr) ? null : match;
-		}
-	})
-}
+const messageBodyOnly = {}
 
 const discordCallbackDefaults = {
 	user: node => '@' + markdown.sanitizeText(node.id),
